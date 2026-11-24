@@ -3,10 +3,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * One row per student: Name | CID | Type | one column per assessment | AI avg | Non-AI avg | Module mark.
- * A row is shown with a red background when the student meets the AI discrepancy condition.
- */
 public class ResultsWindow {
 
     public static void show(List<Student> students) {
@@ -18,11 +14,11 @@ public class ResultsWindow {
         header.add("Non-AI avg");
         header.add("Module mark");
 
-        JPanel grid = new JPanel(new GridLayout(0, header.size(), 2, 2));   // 0 rows = as many as needed
+        JPanel grid = new JPanel(new GridLayout(0, header.size(), 2, 2));
         for (String h : header) grid.add(cell("<b>" + h + "</b>", false));
 
         for (Student s : students) {
-            boolean red = s.hasAiDiscrepancy();          // warning only: marks are unchanged
+            boolean red = s.hasAiDiscrepancy();
 
             grid.add(cell(s.getName(), red));
             grid.add(cell(s.getCid(), red));
@@ -39,7 +35,7 @@ public class ResultsWindow {
 
         JFrame frame = new JFrame("Module results - Exam Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(grid, BorderLayout.CENTER);            // no scroll pane: columns shrink to fit the window
+        frame.add(grid, BorderLayout.CENTER);
         frame.add(new JLabel("  Red row = AI-permitted average at least "
                 + twoDp(Student.AI_DISCREPANCY_THRESHOLD) + " points above non-AI average"), BorderLayout.SOUTH);
         frame.setSize(1300, 110 + 60 * students.size());
@@ -55,7 +51,7 @@ public class ResultsWindow {
         return panel;
     }
 
-    private static String avg(double value) {          // average() returns -1 when there are none
+    private static String avg(double value) {
         return value < 0 ? "N/A" : twoDp(value) + "%";
     }
 
