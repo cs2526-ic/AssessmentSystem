@@ -37,7 +37,6 @@ public class Student {
         return results.removeIf(a -> a.getTitle().equals(title));
     }
 
-
     public double moduleMark() {
         double total = 0;
         for (Assessment a : results) total += a.getWeight(msc) * a.getPercentage();
@@ -50,6 +49,7 @@ public class Student {
         return Math.abs(w - 1.0) < 1e-9;
     }
 
+
     public double average(boolean ai) {
         double sum = 0;
         int n = 0;
@@ -59,11 +59,13 @@ public class Student {
         return n == 0 ? -1 : sum / n;
     }
 
-    public double aiGap() { return average(true) - average(false); }
 
-    public void printReport() {
-        System.out.println(name + " (" + cid + ", " + getType() + ")");
-        for (Assessment a : results) System.out.println("  " + a);
-        System.out.printf("  Module mark: %.2f%%%s%n", moduleMark(), isComplete() ? "" : " (INCOMPLETE)");
+    public static final double AI_DISCREPANCY_THRESHOLD = 20.0;
+
+    public boolean hasAiDiscrepancy() {
+        if (average(true) < 0 || average(false) < 0) return false;
+        return aiGap() >= AI_DISCREPANCY_THRESHOLD - 1e-9;
     }
+
+    public double aiGap() { return average(true) - average(false); }
 }
